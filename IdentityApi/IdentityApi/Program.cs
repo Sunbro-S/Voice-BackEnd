@@ -48,16 +48,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-//using (var scope = app.Services.CreateScope())
-//{
-    
-//    var services = scope.ServiceProvider;
-//    var context = services.GetRequiredService<AuthDbContext>();
-//    if (context.Database.GetPendingMigrations().Any())
-//    {
-//        context.Database.Migrate();
-//    }
-//}
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ContextDb>();
+    context.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
