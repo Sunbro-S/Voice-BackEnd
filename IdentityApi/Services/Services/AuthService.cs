@@ -33,7 +33,7 @@ public class AuthService : IAuthService
         var user = new ExtendedIdentityUser { UserName = userInfo.UserName, Email = userInfo.Email };
         var result = await _userManager.CreateAsync(user, userInfo.Password);
         if (!result.Succeeded)
-            throw new InvalidOperationException($"Tried to add user {user.UserName}, but failed.");
+            return false;
 
         foreach (var roleName in userInfo.RolesCommaDelimited.Split(',').Select(x => x.Trim()))
         {
@@ -73,7 +73,7 @@ public class AuthService : IAuthService
     {
         ExtendedIdentityUser? identityUser = null;
 
-        var response = new LoginResponse();
+        var response = BadLoginResponse();
         if (user.Login != null)
         {
             identityUser = await _userManager.FindByNameAsync(user.Login);
@@ -85,13 +85,13 @@ public class AuthService : IAuthService
         {
             return response;
         }
+        
+        var userInfo = await _context.Users.FindAsync(identityUser.Id);
+        response = GoodLoginResponse(identityUser, userInfo);
 
-        response.IsLogedIn = true;
-        response.JwtToken = this.GenerateTokenString(identityUser);
-        response.RefreshToken = this.GenerateRefreshTokenString();
-
-        identityUser.RefreshToken = response.RefreshToken;
+        identityUser.RefreshToken = response.Tokens.RefreshToken;
         identityUser.RefreshTokenExpiry = DateTime.UtcNow.AddHours(12);
+
         await _userManager.UpdateAsync(identityUser);
 
         return response;
@@ -102,7 +102,7 @@ public class AuthService : IAuthService
         string authHeader = request.Headers["Authorization"].FirstOrDefault();
         if (authHeader == null || !authHeader.StartsWith("Bearer "))
         {
-            throw new InvalidOperationException("Invalid token.");
+            return null;
         }
 
         string accessToken = authHeader.Substring("Bearer ".Length).Trim();
@@ -116,9 +116,7 @@ public class AuthService : IAuthService
         await _userManager.UpdateAsync(user);
 
 
-        response.IsLogedIn = false;
-        response.JwtToken = null;
-        response.RefreshToken = null;
+        response = BadLoginResponse();
 
         return response;
     }
@@ -161,36 +159,46 @@ public class AuthService : IAuthService
 
     public async Task<LoginResponse> RefreshToken(RefreshTokenModel model)
     {
-        var principal = GetTokenPrincipal(model.JwtToken);
+        try
+        {
+            var principal = GetTokenPrincipal(model.JwtToken);
 
-        var response = new LoginResponse();
-        if (principal?.Identity?.Name is null)
+            var response = new LoginResponse();
+            if (principal?.Identity?.Name is null)
+                return response;
+
+            var identityUser = await _userManager.FindByNameAsync(principal.Identity.Name);
+
+            if (identityUser is null || identityUser.RefreshToken != model.RefreshToken ||
+                identityUser.RefreshTokenExpiry < DateTime.UtcNow)
+                return response;
+
+            var userInfo = await _context.Users.FindAsync(identityUser.Id);
+            response = GoodLoginResponse(identityUser, userInfo);
+
+            identityUser.RefreshToken = response.Tokens.RefreshToken;
+            identityUser.RefreshTokenExpiry = DateTime.UtcNow.AddHours(12);
+            await _userManager.UpdateAsync(identityUser);
+
             return response;
-
-        var identityUser = await _userManager.FindByNameAsync(principal.Identity.Name);
-
-        if (identityUser is null || identityUser.RefreshToken != model.RefreshToken ||
-            identityUser.RefreshTokenExpiry < DateTime.UtcNow)
-            return response;
-
-        response.IsLogedIn = true;
-        response.JwtToken = this.GenerateTokenString(identityUser);
-        response.RefreshToken = this.GenerateRefreshTokenString();
-
-        identityUser.RefreshToken = response.RefreshToken;
-        identityUser.RefreshTokenExpiry = DateTime.UtcNow.AddHours(12);
-        await _userManager.UpdateAsync(identityUser);
-
-        return response;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            throw new BadHttpRequestException("Invalid token provided.");
+        }
+        catch (BadHttpRequestException)
+        {
+            throw new BadHttpRequestException("The request is invalid.");
+        }
     }
 
     public async Task<UserSerchResponse> GetUserByLogin(string friendName)
     {
         var user = await _userManager.FindByNameAsync(friendName);
 
-        if (user == null)
+        if (user == null || friendName == null)
         {
-            throw new InvalidOperationException("User not found");
+            return null;
         }
 
         var userInfo = await _context.Users.FindAsync(user.Id);
@@ -207,7 +215,7 @@ public class AuthService : IAuthService
         string authHeader = request.Headers["Authorization"].FirstOrDefault();
         if (authHeader == null || !authHeader.StartsWith("Bearer "))
         {
-            throw new InvalidOperationException("Invalid token.");
+            return null;
         }
 
         string accessToken = authHeader.Substring("Bearer ".Length).Trim();
@@ -224,7 +232,7 @@ public class AuthService : IAuthService
         string authHeader = request.Headers["Authorization"].FirstOrDefault();
         if (authHeader == null || !authHeader.StartsWith("Bearer "))
         {
-            throw new InvalidOperationException("Invalid token.");
+            return null;
         }
 
         string accessToken = authHeader.Substring("Bearer ".Length).Trim();
@@ -234,7 +242,7 @@ public class AuthService : IAuthService
         var result = await _userManager.DeleteAsync(user);
         if (!result.Succeeded)
         {
-            throw new InvalidOperationException("Error deleting user.");
+            return null;
         }
 
         var userInfo = await _context.Users.FindAsync(user.Id);
@@ -251,9 +259,7 @@ public class AuthService : IAuthService
 
         await _context.SaveChangesAsync();
 
-        response.IsLogedIn = false;
-        response.JwtToken = null;
-        response.RefreshToken = null;
+        response = BadLoginResponse();
         return response;
     }
 
@@ -262,7 +268,7 @@ public class AuthService : IAuthService
         string authHeader = request.Headers["Authorization"].FirstOrDefault();
         if (authHeader == null || !authHeader.StartsWith("Bearer "))
         {
-            throw new InvalidOperationException("Invalid token.");
+            return null;
         }
 
         string accessToken = authHeader.Substring("Bearer ".Length).Trim();
@@ -273,7 +279,7 @@ public class AuthService : IAuthService
         var userInfo = await _context.Users.FindAsync(user.Id);
         if (user == null)
         {
-            throw new InvalidOperationException("User not found.");
+            return null;
         }
 
         if (!string.IsNullOrEmpty(updateUserModel.UserName))
@@ -300,16 +306,14 @@ public class AuthService : IAuthService
         }
 
         var response = new LoginResponse();
-        response.IsLogedIn = true;
-        response.JwtToken = this.GenerateTokenString(user);
-        response.RefreshToken = this.GenerateRefreshTokenString();
+        response = GoodLoginResponse(user, userInfo);
 
-        user.RefreshToken = response.RefreshToken;
+        user.RefreshToken = response.Tokens.RefreshToken;
         user.RefreshTokenExpiry = DateTime.UtcNow.AddHours(12);
         var result = await _userManager.UpdateAsync(user);
         if (!result.Succeeded)
         {
-            throw new InvalidOperationException("Error updating user.");
+            return null;
         }
 
         if (userInfo != null)
@@ -326,17 +330,29 @@ public class AuthService : IAuthService
 
     private ClaimsPrincipal? GetTokenPrincipal(string token)
     {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("Jwt:Key").Value));
-        var validation = new TokenValidationParameters
+        try
         {
-            IssuerSigningKey = securityKey,
-            ValidateLifetime = false,
-            ValidateActor = false,
-            ValidateIssuer = false,
-            ValidateAudience = false,
-        };
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("Jwt:Key").Value));
+            var validation = new TokenValidationParameters
+            {
+                IssuerSigningKey = securityKey,
+                ValidateLifetime = false,
+                ValidateActor = false,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+            };
 
-        return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
+            return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
+        }
+        catch (SecurityTokenMalformedException)
+        {
+            throw new BadHttpRequestException("Malformed JWT token.", 400);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error validating token: {ex.Message}");
+            throw new UnauthorizedAccessException("Invalid token.", ex);
+        }
 
     }
 
@@ -376,5 +392,47 @@ public class AuthService : IAuthService
 
         string tokenString = new JwtSecurityTokenHandler().WriteToken(securityToken);
         return tokenString;
+    }
+
+    private LoginResponse BadLoginResponse()
+    {
+        var response = new LoginResponse()
+        {
+            Tokens = new Tokens
+            {
+                IsLogedIn = false,
+                JwtToken = null,
+                JwtTokenExpiry = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds(),
+                RefreshToken = null
+            },
+            User = new User
+            {
+                Login = null,
+                Fullname = null,
+                Email = null
+            }
+        };
+        return response;
+    }
+
+    public LoginResponse GoodLoginResponse( ExtendedIdentityUser identityUser, UserEntity userInfo)
+    {
+        var response = new LoginResponse()
+        {
+            Tokens = new Tokens
+            {
+                IsLogedIn = true,
+                JwtToken = this.GenerateTokenString(identityUser),
+                JwtTokenExpiry = new DateTimeOffset(DateTime.UtcNow.AddHours(12)).ToUnixTimeSeconds(),
+                RefreshToken = this.GenerateRefreshTokenString()
+            },
+            User = new User
+            {
+                Login = userInfo.UserName,
+                Fullname = $"{userInfo.Lastname} {userInfo.Name} {userInfo.Otchestvo}",
+                Email = userInfo.Mail
+            }
+        };
+        return response;
     }
 }
