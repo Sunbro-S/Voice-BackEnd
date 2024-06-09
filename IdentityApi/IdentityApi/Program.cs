@@ -56,19 +56,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-<<<<<<< Updated upstream
-//using (var scope = app.Services.CreateScope())
-//{
-    
-//    var services = scope.ServiceProvider;
-//    var context = services.GetRequiredService<AuthDbContext>();
-//    if (context.Database.GetPendingMigrations().Any())
-//    {
-//        context.Database.Migrate();
-//    }
-//}
-
-=======
 app.UseCors("AllowAllOrigins");
 using (var scope = app.Services.CreateScope())
 {
@@ -76,7 +63,6 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<ContextDb>();
     context.Database.Migrate();
 }
->>>>>>> Stashed changes
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

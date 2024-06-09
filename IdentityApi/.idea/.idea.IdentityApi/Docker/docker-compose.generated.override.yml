@@ -1,0 +1,23 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  identityapi:
+    build:
+      context: "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi"
+      dockerfile: "IdentityApi/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/IdentityApi.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      NUGET_PACKAGES: "C:\\Users\\shuks\\.nuget\\packages"
+      NUGET_FALLBACK_PACKAGES: "C:\\Users\\shuks\\.nuget\\packages"
+    image: "identityapi:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\shuks\\.nuget\\packages:/root/.nuget/fallbackpackages"
+    - "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\\
+      IdentityApi:/app:rw"
+    - "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi:/src:rw"
+    working_dir: "/app"
