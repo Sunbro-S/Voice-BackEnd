@@ -23,7 +23,7 @@ namespace IdentityApi.Controllers
             {
                 return Ok("Successfuly done");
             }
-            return BadRequest("Something went worng");
+            return BadRequest("Пользователь уже был создан или не были выполнены условия!");
         }
 
         [HttpPost("Login")]
@@ -31,14 +31,14 @@ namespace IdentityApi.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest("Что-то пошло не так");
             }
             var loginResult = await _authService.Login(user);
-            if (loginResult.IsLogedIn)
+            if (loginResult.Tokens.IsLogedIn)
             {
                 return Ok(loginResult);
             }
-            return Unauthorized();
+            return BadRequest("Неверный логин или пароль!");
         }
 
         [HttpPost("Logout")]
@@ -46,25 +46,28 @@ namespace IdentityApi.Controllers
         {
             
           var loginResult = await _authService.Logout(Request);
+          if (loginResult == null)
+              return Unauthorized("Invalid token or token expired");
           return Ok(loginResult);
-            
         }
 
         [HttpPost("RefreshToken")]
         public async Task<IActionResult> RefreshToken(RefreshTokenModel model)
         {
             var loginResult = await _authService.RefreshToken(model);
-            if (loginResult.IsLogedIn)
+            if (loginResult.Tokens.IsLogedIn)
             {
                 return Ok(loginResult);
             }
-            return Unauthorized();
+            return Unauthorized("Invalid token or token has been expired");
         }
 
         [HttpGet("FriendList")]
         public async Task<IActionResult> GetFriendList()
         {
             var result = await _authService.GetFriendList(Request);
+            if (result==null)
+                return BadRequest("Не удалось получить список друзей");
             return Ok(result);
         }
 
@@ -72,6 +75,8 @@ namespace IdentityApi.Controllers
         public async Task<IActionResult> GetUserByLogin(string friendName)
         {
             var result = await _authService.GetUserByLogin(friendName);
+            if (result==null)
+                return NotFound("Данный пользователь не был найден");
             return Ok(result);
         }
 
@@ -81,28 +86,19 @@ namespace IdentityApi.Controllers
         public async Task<IActionResult> DeleteAccount()
         {
             var result = await _authService.DeleteAccount(Request);
-            if (result.IsLogedIn==false)
-            {
-                return Ok(new { Message = "User account deleted successfully" });
-            }
-            else
-            {
-                return BadRequest(new { Message = "Failed to delete user account" });
-            }
+            if (result==null)
+                return BadRequest("Something went wrong");
+            return Ok("User account deleted successfully");
+            
         }
 
         [HttpPut("PutAccountChanges")]
         public async Task<IActionResult> PutAccountChanges(UpdateUserDataRequest updateUserModel)
         {
             var result = await _authService.PutAccountChanges(Request, updateUserModel);
-            if (result.IsLogedIn==true)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest(new { Message = "Failed to update user account" });
-            }
+            if (result==null)
+                return BadRequest("Failed to update user account");
+            return Ok(result);
         }
     }
 }

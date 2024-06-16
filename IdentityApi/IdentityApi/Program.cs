@@ -19,7 +19,8 @@ builder.Services.AddDbContext<ContextDb>(options =>
 });
 
 builder.Services.AddIdentity<ExtendedIdentityUser, IdentityRole>(options =>
-{
+    {
+        options.User.RequireUniqueEmail = true;
     options.Password.RequiredLength = 5;
 }).AddEntityFrameworkStores<ContextDb>()
     .AddDefaultTokenProviders();
@@ -41,6 +42,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        };
    });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -48,13 +57,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.UseCors("AllowAllOrigins");
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ContextDb>();
     context.Database.Migrate();
 }
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
