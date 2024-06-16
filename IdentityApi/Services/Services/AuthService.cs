@@ -172,6 +172,7 @@ public class AuthService : IAuthService
             var principal = GetTokenPrincipal(model.JwtToken);
 
             var response = BadLoginResponse();
+
             if (principal?.Identity?.Name is null)
                 return response;
 
