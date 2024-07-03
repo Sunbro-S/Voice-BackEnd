@@ -7,6 +7,7 @@ using Infrastructure.Data.Models;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -172,7 +173,6 @@ public class AuthService : IAuthService
             var principal = GetTokenPrincipal(model.JwtToken);
 
             var response = BadLoginResponse();
-
             if (principal?.Identity?.Name is null)
                 return response;
 
@@ -201,22 +201,27 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<UserSerchResponse> GetUserByLogin(string friendName)
+    public async Task<List<UserSerchResponse>> GetUserByLogin(string friendName)
     {
-        var user = await _userManager.FindByNameAsync(friendName);
-
-        if (user == null || friendName == null)
+        if (string.IsNullOrEmpty(friendName))
         {
-            return null;
+            return new List<UserSerchResponse>();
         }
 
-        var userInfo = await _context.Users.FindAsync(user.Id);
-        var result = new UserSerchResponse()
-        {
-            Username = user.UserName,
-            Fullname = $"{userInfo.Lastname} {userInfo.Name} {userInfo.Otchestvo}"
-        };
-        return result;
+        // Приведение запроса к нижнему регистру для нечувствительного к регистру поиска
+        var lowerCaseQuery = friendName.ToLower();
+
+        var users = await _context.Users
+            .Where(u => u.UserName.ToLower().Contains(lowerCaseQuery) ||
+                        (u.Lastname + " " + u.Name + " " + u.Otchestvo).ToLower().Contains(lowerCaseQuery))
+            .Select(u => new UserSerchResponse
+            {
+                Username = u.UserName,
+                Fullname = $"{u.Lastname} {u.Name} {u.Otchestvo}"
+            })
+            .ToListAsync();
+
+        return users;
     }
 
     public async Task<List<string>> GetFriendList(HttpRequest request)

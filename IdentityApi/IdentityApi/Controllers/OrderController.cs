@@ -24,7 +24,6 @@ namespace IdentityApi.Controllers
                 return Ok("Successfuly done");
             }
             return BadRequest("Пользователь уже был создан или не были выполнены условия!");
-
         }
 
         [HttpPost("Login")]
@@ -33,16 +32,13 @@ namespace IdentityApi.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest("Что-то пошло не так");
-
             }
             var loginResult = await _authService.Login(user);
             if (loginResult.Tokens.IsLogedIn)
             {
                 return Ok(loginResult);
             }
-
             return BadRequest("Неверный логин или пароль!");
-
         }
 
         [HttpPost("Logout")]
@@ -51,9 +47,7 @@ namespace IdentityApi.Controllers
             
           var loginResult = await _authService.Logout(Request);
           if (loginResult == null)
-
               return Unauthorized("Invalid token or token expired");
-
           return Ok(loginResult);
         }
 
@@ -65,9 +59,7 @@ namespace IdentityApi.Controllers
             {
                 return Ok(loginResult);
             }
-
             return Unauthorized("Invalid token or token has been expired");
-
         }
 
         [HttpGet("FriendList")]
@@ -76,7 +68,6 @@ namespace IdentityApi.Controllers
             var result = await _authService.GetFriendList(Request);
             if (result==null)
                 return BadRequest("Не удалось получить список друзей");
-
             return Ok(result);
         }
 
@@ -84,9 +75,8 @@ namespace IdentityApi.Controllers
         public async Task<IActionResult> GetUserByLogin(string friendName)
         {
             var result = await _authService.GetUserByLogin(friendName);
-            if (result==null)
+            if (result==null || result.Count == 0)
                 return NotFound("Данный пользователь не был найден");
-
             return Ok(result);
         }
 
@@ -99,7 +89,6 @@ namespace IdentityApi.Controllers
             if (result==null)
                 return BadRequest("Something went wrong");
             return Ok("User account deleted successfully");
-
             
         }
 
