@@ -44,11 +44,18 @@ namespace IdentityApi.Controllers
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()
         {
-            
-          var loginResult = await _authService.Logout(Request);
-          if (loginResult == null)
-              return Unauthorized("Invalid token or token expired");
-          return Ok(loginResult);
+            try
+            {
+                var loginResult = await _authService.Logout(Request);
+                if (loginResult == null)
+                    return Unauthorized("Invalid token or token expired");
+
+                return Ok(loginResult);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return Unauthorized("Invalid token or token expired");
+            }
         }
 
         [HttpPost("RefreshToken")]
