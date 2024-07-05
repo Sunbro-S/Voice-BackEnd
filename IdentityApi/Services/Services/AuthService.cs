@@ -201,14 +201,24 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<List<UserSerchResponse>> GetUserByLogin(string friendName)
+    public async Task<List<UserSerchResponse>> GetUserByLogin(string friendName, int page = 1, int pageSize = 10)
     {
+        
         if (string.IsNullOrEmpty(friendName))
         {
-            return new List<UserSerchResponse>();
+            var allUsers = await _context.Users
+                .Select(u => new UserSerchResponse
+                {
+                    Username = u.UserName,
+                    Fullname = $"{u.Lastname} {u.Name} {u.Otchestvo}"
+                })
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return allUsers;
         }
 
-        // Приведение запроса к нижнему регистру для нечувствительного к регистру поиска
         var lowerCaseQuery = friendName.ToLower();
 
         var users = await _context.Users
@@ -219,6 +229,8 @@ public class AuthService : IAuthService
                 Username = u.UserName,
                 Fullname = $"{u.Lastname} {u.Name} {u.Otchestvo}"
             })
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
         return users;

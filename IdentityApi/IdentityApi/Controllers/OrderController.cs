@@ -79,10 +79,15 @@ namespace IdentityApi.Controllers
         }
 
         [HttpGet("GetUser")]
-        public async Task<IActionResult> GetUserByLogin(string friendName)
+        public async Task<IActionResult> GetUserByLogin(string? friendName, int page, int pageSize)
         {
-            var result = await _authService.GetUserByLogin(friendName);
-            if (result==null || result.Count == 0)
+            string authHeader = Request.Headers["Authorization"].FirstOrDefault();
+            if (authHeader == null || !authHeader.StartsWith("Bearer "))
+            {
+                return Unauthorized("User is not authenticated.");
+            }
+            var result = await _authService.GetUserByLogin(friendName, page, pageSize);
+            if (result==null)
                 return NotFound("Данный пользователь не был найден");
             return Ok(result);
         }
