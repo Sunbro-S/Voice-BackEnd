@@ -1,6 +1,6 @@
 ﻿services:
   identityapi:
-    image: sunbros/identityapi
+    image: identityapi
     environment:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=UserTest;Username=postgres;Password=qe13zc24680
       - ASPNETCORE_ENVIRONMENT=Development
@@ -11,9 +11,11 @@
     ports:
       - "8080:8080"
       - "8081:8081"
+    depends_on:
+      - kafka
     volumes:
-      - C:\Users\shuks\RiderProjects\ArtsoftMicroServices\Artsoft\IdentityApi\IdentityApi\ASP.Net:/home/app/.aspnet/https 
-
+      - C:\Users\shuks\RiderProjects\ArtsoftMicroServices\Artsoft\IdentityApi\IdentityApi\ASP.Net:/home/app/.aspnet/https
+  
   db:
     image: postgres:latest
     environment:
@@ -22,3 +24,23 @@
       POSTGRES_PASSWORD: qe13zc24680
     ports:
       - "5432:5432"
+  
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9001:9001"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:9999
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9001
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    depends_on:
+      - db
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 9999
+      ZOOKEEPER_TICK_TIME: 2000

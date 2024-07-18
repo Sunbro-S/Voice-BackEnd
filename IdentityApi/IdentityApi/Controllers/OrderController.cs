@@ -2,6 +2,8 @@ using IdentityApi.Models;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RPC.Interface;
+
 namespace IdentityApi.Controllers
 {
     [Route("api/[controller]")]
@@ -9,11 +11,13 @@ namespace IdentityApi.Controllers
     public class OrderController : ControllerBase
     {
         
+        private readonly IKafkaProducerService _producerService;
         private readonly IAuthService _authService;
 
-        public OrderController(IAuthService authService)
+        public OrderController(IAuthService authService, IKafkaProducerService producerService)
         {
             _authService = authService;
+            _producerService = producerService;
         }
 
         [HttpPost("Register")]
@@ -111,6 +115,15 @@ namespace IdentityApi.Controllers
             if (result==null)
                 return BadRequest("Failed to update user account");
             return Ok(result);
+        }
+        
+
+
+        [HttpPost("send")]
+        public async Task<IActionResult> SendMessage([FromBody] KafkaFriendshipRequest message)
+        {
+            await _producerService.SendMessageAsync(message);
+            return Ok();
         }
     }
 }
