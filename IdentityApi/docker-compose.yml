@@ -1,6 +1,6 @@
 ﻿services:
   identityapi:
-    image: identityapi
+    image: sunbros/identityapi
     environment:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=UserTest;Username=postgres;Password=qe13zc24680
       - ASPNETCORE_ENVIRONMENT=Development
@@ -12,14 +12,33 @@
       - "8080:8080"
       - "8081:8081"
     depends_on:
-      - kafka
+      - db
     volumes:
-      - C:\Users\shuks\RiderProjects\ArtsoftMicroServices\Artsoft\IdentityApi\IdentityApi\ASP.Net:/home/app/.aspnet/https
+      - C:\Users\shuks\RiderProjects\Voice\Voice-BackEnd\IdentityApi\IdentityApi\ASP.Net:/home/app/.aspnet/https
+        
+  usermanagerapi:
+    image: sunbros/usermanagerapi
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=UserTest;Username=postgres;Password=qe13zc24680
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Admin123
+      - ASPNETCORE_HTTP_PORTS=8082
+      - ASPNETCORE_HTTPS_PORTS=8083
+    ports:
+      - "8082:8082"
+      - "8083:8083"
+    depends_on:
+      - kafka
+      - db
+      - identityapi
+    volumes:
+      - C:\Users\shuks\RiderProjects\Voice\Voice-BackEnd\UserManagerApi\UserManagerApi\ASP.Net:/home/app/.aspnet/https
   
   db:
     image: postgres:latest
     environment:
-      POSTGRES_DB: UserTest
+      POSTGRES_DB: Voice
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: qe13zc24680
     ports:

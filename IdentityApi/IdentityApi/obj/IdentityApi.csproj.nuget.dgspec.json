@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\IdentityApi\\IdentityApi.csproj": {}
+    "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\IdentityApi\\IdentityApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Domain\\Domain.csproj": {
+    "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Domain\\Domain.csproj",
+        "projectPath": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\shuks\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Domain\\obj\\",
+        "outputPath": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,31 +50,31 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "EntityFramework": {
-              "target": "Package",
-              "version": "[6.5.0-preview2-24180-01, )"
-            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.7, )"
             },
             "Microsoft.AspNetCore.Http": {
               "target": "Package",
               "version": "[2.2.2, )"
             },
+            "Microsoft.AspNetCore.Http.Abstractions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.7, )"
             },
-            "Microsoft.EntityFrameworkCore": {
+            "Microsoft.Build.Framework": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[17.10.4, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.7, )"
             },
             "Npgsql": {
               "target": "Package",
@@ -86,7 +86,7 @@
             },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
-              "version": "[7.6.0, )"
+              "version": "[8.0.0, )"
             }
           },
           "imports": [
@@ -109,14 +109,14 @@
         }
       }
     },
-    "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\IdentityApi\\IdentityApi.csproj": {
+    "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\IdentityApi\\IdentityApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\IdentityApi\\IdentityApi.csproj",
+        "projectUniqueName": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\IdentityApi\\IdentityApi.csproj",
         "projectName": "IdentityApi",
-        "projectPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\IdentityApi\\IdentityApi.csproj",
+        "projectPath": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\IdentityApi\\IdentityApi.csproj",
         "packagesPath": "C:\\Users\\shuks\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\IdentityApi\\obj\\",
+        "outputPath": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\IdentityApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -138,14 +138,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Infrastructure\\Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Infrastructure\\Infrastructure.csproj"
-              },
-              "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\RPC\\RPC.csproj": {
-                "projectPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\RPC\\RPC.csproj"
-              },
-              "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Services\\Services.csproj": {
-                "projectPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Services\\Services.csproj"
+              "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Services\\Services.csproj": {
+                "projectPath": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Services\\Services.csproj"
               }
             }
           }
@@ -165,43 +159,35 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "EntityFramework": {
-              "target": "Package",
-              "version": "[6.5.0-preview2-24180-01, )"
-            },
-            "MassTransit.Kafka": {
-              "target": "Package",
-              "version": "[8.2.3, )"
-            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.7, )"
             },
             "Microsoft.AspNetCore.Http": {
               "target": "Package",
               "version": "[2.2.2, )"
             },
+            "Microsoft.AspNetCore.Http.Abstractions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.7, )"
             },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.7, )"
             },
-            "Microsoft.EntityFrameworkCore": {
+            "Microsoft.Build.Framework": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[17.10.4, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.6, )"
-            },
-            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
-              "target": "Package",
-              "version": "[8.0.2, )"
+              "version": "[8.0.7, )"
             },
             "Npgsql": {
               "target": "Package",
@@ -217,7 +203,7 @@
             },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
-              "version": "[7.6.0, )"
+              "version": "[8.0.0, )"
             }
           },
           "imports": [
@@ -243,14 +229,14 @@
         }
       }
     },
-    "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Infrastructure\\Infrastructure.csproj": {
+    "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Infrastructure\\Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Infrastructure\\Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Infrastructure\\Infrastructure.csproj",
         "projectName": "Infrastructure",
-        "projectPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Infrastructure\\Infrastructure.csproj",
+        "projectPath": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Infrastructure\\Infrastructure.csproj",
         "packagesPath": "C:\\Users\\shuks\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Infrastructure\\obj\\",
+        "outputPath": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -271,11 +257,7 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {
-              "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Domain\\Domain.csproj"
-              }
-            }
+            "projectReferences": {}
           }
         },
         "warningProperties": {
@@ -295,29 +277,29 @@
           "dependencies": {
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.7, )"
             },
             "Microsoft.AspNetCore.Http": {
               "target": "Package",
               "version": "[2.2.2, )"
             },
+            "Microsoft.AspNetCore.Http.Abstractions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.7, )"
             },
             "Microsoft.Build.Framework": {
               "target": "Package",
-              "version": "[17.8.3, )"
-            },
-            "Microsoft.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[17.10.4, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.7, )"
             },
             "Npgsql": {
               "target": "Package",
@@ -326,6 +308,10 @@
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[8.0.4, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.0.0, )"
             }
           },
           "imports": [
@@ -348,97 +334,14 @@
         }
       }
     },
-    "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\RPC\\RPC.csproj": {
+    "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Services\\Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\RPC\\RPC.csproj",
-        "projectName": "RPC",
-        "projectPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\RPC\\RPC.csproj",
-        "packagesPath": "C:\\Users\\shuks\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\RPC\\obj\\",
-        "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
-        "configFilePaths": [
-          "C:\\Users\\shuks\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "net8.0"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net8.0": {
-            "targetAlias": "net8.0",
-            "projectReferences": {
-              "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Domain\\Domain.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        }
-      },
-      "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
-          "dependencies": {
-            "Confluent.Kafka": {
-              "target": "Package",
-              "version": "[2.5.0, )"
-            },
-            "MassTransit": {
-              "target": "Package",
-              "version": "[8.2.3, )"
-            },
-            "MassTransit.Kafka": {
-              "target": "Package",
-              "version": "[8.2.3, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Services\\Services.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Services\\Services.csproj",
+        "projectUniqueName": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Services\\Services.csproj",
         "projectName": "Services",
-        "projectPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Services\\Services.csproj",
+        "projectPath": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Services\\Services.csproj",
         "packagesPath": "C:\\Users\\shuks\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Services\\obj\\",
+        "outputPath": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Services\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -460,11 +363,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Domain\\Domain.csproj"
+              "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Domain\\Domain.csproj"
               },
-              "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Infrastructure\\Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\shuks\\RiderProjects\\ArtsoftMicroServices\\Artsoft\\IdentityApi\\Infrastructure\\Infrastructure.csproj"
+              "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Infrastructure\\Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\shuks\\RiderProjects\\Voice\\Voice-BackEnd\\IdentityApi\\Infrastructure\\Infrastructure.csproj"
               }
             }
           }
@@ -486,17 +389,29 @@
           "dependencies": {
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.7, )"
             },
-            "Microsoft.EntityFrameworkCore": {
+            "Microsoft.AspNetCore.Http": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[2.2.2, )"
+            },
+            "Microsoft.AspNetCore.Http.Abstractions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.7, )"
+            },
+            "Microsoft.Build.Framework": {
+              "target": "Package",
+              "version": "[17.10.4, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.7, )"
             },
             "Npgsql": {
               "target": "Package",
@@ -505,6 +420,10 @@
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[8.0.4, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.0.0, )"
             }
           },
           "imports": [

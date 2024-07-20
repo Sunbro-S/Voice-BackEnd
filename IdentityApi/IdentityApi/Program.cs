@@ -1,8 +1,6 @@
-using Confluent.Kafka;
+
 using Infrastructure;
 using Infrastructure.Data.Models;
-using MassTransit;
-using MassTransit.KafkaIntegration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -11,9 +9,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Services;
 using System.Text;
-using IdentityApi.Models;
-using RPC;
-using RPC.Interface;
+using Domain.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,44 +59,26 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMassTransit(x =>
-{
-    x.AddConsumer<KafkaFriendshipRequestConsumer>();
-
-    x.UsingInMemory((context, cfg) =>
-    {
-        cfg.ConfigureEndpoints(context);
-    });
-
-    x.AddRider(rider =>
-    {
-        rider.AddProducer<KafkaFriendshipRequest>("friendship-request-topic");
-
-        rider.AddConsumer<KafkaFriendshipRequestConsumer>();
-
-        rider.UsingKafka((context, k) =>
-        {
-            k.Host("kafka:9001");
-
-            k.TopicEndpoint<KafkaFriendshipRequest>("friendship-request-topic", "groupid", c =>
-            {
-                c.ConfigureConsumer<KafkaFriendshipRequestConsumer>(context);
-            });
-        });
-    });
-});
-
-builder.Services.AddMassTransitHostedService();
-builder.Services.AddScoped<IKafkaProducerService, KafkaProducerService>();
-builder.Services.AddScoped<KafkaFriendshipRequestConsumer>();
-
 var app = builder.Build();
 app.UseCors("AllowAllOrigins");
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ContextDb>();
-    context.Database.Migrate();
+
+    try
+    {
+        // Применить миграции только если есть новые миграции
+        if (context.Database.GetPendingMigrations().Any())
+        {
+            context.Database.Migrate();
+        }
+    }
+    catch (Exception ex)
+    {
+        // Обработка ошибки
+        Console.WriteLine($"An error occurred while migrating the database: {ex.Message}");
+    }
 }
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

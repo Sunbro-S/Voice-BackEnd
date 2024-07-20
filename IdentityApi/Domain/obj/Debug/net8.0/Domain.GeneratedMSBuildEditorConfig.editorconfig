@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Domain
-build_property.ProjectDir = C:\Users\shuks\RiderProjects\ArtsoftMicroServices\Artsoft\IdentityApi\Domain\
+build_property.ProjectDir = C:\Users\shuks\RiderProjects\Voice\Voice-BackEnd\IdentityApi\Domain\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

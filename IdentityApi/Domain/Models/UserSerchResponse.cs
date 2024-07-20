@@ -1,4 +1,4 @@
-﻿namespace IdentityApi.Models;
+﻿namespace Domain.Models;
 
 public class UserSerchResponse
 {

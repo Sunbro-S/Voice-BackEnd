@@ -1,8 +1,7 @@
-using IdentityApi.Models;
-using Infrastructure.Services.Interfaces;
+﻿using Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RPC.Interface;
+using Services.Services.Interfaces;
 
 namespace IdentityApi.Controllers
 {
@@ -10,14 +9,11 @@ namespace IdentityApi.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        
-        private readonly IKafkaProducerService _producerService;
         private readonly IAuthService _authService;
 
-        public OrderController(IAuthService authService, IKafkaProducerService producerService)
+        public OrderController(IAuthService authService)
         {
             _authService = authService;
-            _producerService = producerService;
         }
 
         [HttpPost("Register")]
@@ -73,31 +69,7 @@ namespace IdentityApi.Controllers
             return Unauthorized("Invalid token or token has been expired");
         }
 
-        [HttpGet("FriendList")]
-        public async Task<IActionResult> GetFriendList()
-        {
-            var result = await _authService.GetFriendList(Request);
-            if (result==null)
-                return BadRequest("Не удалось получить список друзей");
-            return Ok(result);
-        }
-
-        [HttpGet("GetUser")]
-        public async Task<IActionResult> GetUserByLogin(string? friendName, int page, int pageSize)
-        {
-            string authHeader = Request.Headers["Authorization"].FirstOrDefault();
-            if (authHeader == null || !authHeader.StartsWith("Bearer "))
-            {
-                return Unauthorized("User is not authenticated.");
-            }
-            var result = await _authService.GetUserByLogin(friendName, page, pageSize);
-            if (result==null)
-                return NotFound("Данный пользователь не был найден");
-            return Ok(result);
-        }
-
-       
-
+        
         [HttpDelete("DeleteAccount")]
         public async Task<IActionResult> DeleteAccount()
         {
@@ -115,15 +87,6 @@ namespace IdentityApi.Controllers
             if (result==null)
                 return BadRequest("Failed to update user account");
             return Ok(result);
-        }
-        
-
-
-        [HttpPost("send")]
-        public async Task<IActionResult> SendMessage([FromBody] KafkaFriendshipRequest message)
-        {
-            await _producerService.SendMessageAsync(message);
-            return Ok();
         }
     }
 }

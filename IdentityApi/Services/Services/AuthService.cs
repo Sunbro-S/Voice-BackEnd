@@ -2,16 +2,18 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using IdentityApi.Models;
+using Domain.Models;
+using Infrastructure;
 using Infrastructure.Data.Models;
-using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Services.Services.Interfaces;
 
-namespace Infrastructure.Services;
+namespace Services.Services;
 
 public class AuthService : IAuthService
 {
@@ -201,57 +203,6 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<List<UserSerchResponse>> GetUserByLogin(string friendName, int page = 1, int pageSize = 10)
-    {
-        
-        if (string.IsNullOrEmpty(friendName))
-        {
-            var allUsers = await _context.Users
-                .Select(u => new UserSerchResponse
-                {
-                    Username = u.UserName,
-                    Fullname = $"{u.Lastname} {u.Name} {u.Otchestvo}"
-                })
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            return allUsers;
-        }
-
-        var lowerCaseQuery = friendName.ToLower();
-
-        var users = await _context.Users
-            .Where(u => u.UserName.ToLower().Contains(lowerCaseQuery) ||
-                        (u.Lastname + " " + u.Name + " " + u.Otchestvo).ToLower().Contains(lowerCaseQuery))
-            .Select(u => new UserSerchResponse
-            {
-                Username = u.UserName,
-                Fullname = $"{u.Lastname} {u.Name} {u.Otchestvo}"
-            })
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-        return users;
-    }
-
-    public async Task<List<string>> GetFriendList(HttpRequest request)
-    {
-        string authHeader = request.Headers["Authorization"].FirstOrDefault();
-        if (authHeader == null || !authHeader.StartsWith("Bearer "))
-        {
-            return null;
-        }
-
-        string accessToken = authHeader.Substring("Bearer ".Length).Trim();
-        var response = new LoginResponse();
-        var userEmail = GetClaimFromAccessToken(accessToken, ClaimTypes.Email);
-        var user = await _userManager.FindByEmailAsync(userEmail);
-        var friendList = await _context.FriendLists.FindAsync(user.Id);
-        return friendList.FriendList;
-
-    }
 
     public async Task<LoginResponse> DeleteAccount(HttpRequest request)
     {
@@ -400,9 +351,11 @@ public class AuthService : IAuthService
         var role = _userManager.GetRolesAsync(user).Result.First();
         var claims = new List<Claim>
         {
+            
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Role, role),
+            new Claim(ClaimTypes.Role, role)
         };
 
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("Jwt:Key").Value));
