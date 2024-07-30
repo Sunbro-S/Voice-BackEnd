@@ -3,16 +3,19 @@ using Infrastructure;
 using MassTransit;
 using MassTransit.KafkaIntegration;
 using Microsoft.EntityFrameworkCore;
-using Services;
-using Domain.Models;
-using Infrastructure.Data.Models;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using RPC;
 using RPC.Interface;
+using Services;
+using Domain.Models;
+using Infrastructure.Data.Models;
+using UserManagerApi;
+
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Add services to the container.      
+// Add services to the container.
 builder.Services.AddDbContext<ContextDb>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetSection("ConnectionStrings:DefaultConnection").Value,
@@ -25,14 +28,14 @@ builder.Services.AddIdentity<ExtendedIdentityUser, IdentityRole>()
 
 builder.Services.TryAddService();
 
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
         builder => builder
             .AllowAnyOrigin()
             .AllowAnyHeader()
-            .AllowAnyMethod());
+            .AllowAnyMethod()
+            .WithExposedHeaders("X-Total-Count"));
 });
 
 builder.Services.AddControllers();
@@ -43,6 +46,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<KafkaFriendshipRequestConsumer>();
+    x.AddConsumer<KafkaResponseConsumer>();
 
     x.UsingInMemory((context, cfg) =>
     {
@@ -52,8 +56,12 @@ builder.Services.AddMassTransit(x =>
     x.AddRider(rider =>
     {
         rider.AddProducer<FriendshipResponse>("friendship-response-topic");
-
+        rider.AddProducer<KafkaFriendshipRequest>("friendship-request-topic");
         rider.AddConsumer<KafkaFriendshipRequestConsumer>();
+        rider.AddConsumer<KafkaResponseConsumer>();
+        
+        // Configure Kafka using the options
+
         rider.UsingKafka((context, k) =>
         {
             k.Host("kafka:9001");
@@ -62,17 +70,23 @@ builder.Services.AddMassTransit(x =>
             {
                 c.ConfigureConsumer<KafkaFriendshipRequestConsumer>(context);
             });
+            k.TopicEndpoint<FriendshipResponse>("friendship-response-topic", "group_id", c =>
+            {
+                c.ConfigureConsumer<KafkaResponseConsumer>(context);
+            });
         });
     });
 });
 
 builder.Services.AddMassTransitHostedService();
+builder.Services.AddScoped<IProducerTestService, ProducerTestService>();
 builder.Services.AddScoped<IKafkaProducerService, KafkaProducerService>();
 builder.Services.AddScoped<KafkaFriendshipRequestConsumer>();
-
+builder.Services.AddScoped<KafkaResponseConsumer>();
 
 var app = builder.Build();
 app.UseCors("AllowAllOrigins");
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -80,7 +94,6 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        // Применить миграции только если есть новые миграции
         if (context.Database.GetPendingMigrations().Any())
         {
             context.Database.Migrate();
@@ -88,10 +101,10 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        // Обработка ошибки
         Console.WriteLine($"An error occurred while migrating the database: {ex.Message}");
     }
 }
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -100,11 +113,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
-
 app.MapControllers();
-
 app.Run();

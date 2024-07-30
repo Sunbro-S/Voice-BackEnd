@@ -2,7 +2,7 @@
   usermanagerapi:
     image: usermanagerapi
     environment:
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=UserTest;Username=postgres;Password=qe13zc24680
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=Voice;Username=postgres;Password=qe13zc24680
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/aspnetapp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Admin123

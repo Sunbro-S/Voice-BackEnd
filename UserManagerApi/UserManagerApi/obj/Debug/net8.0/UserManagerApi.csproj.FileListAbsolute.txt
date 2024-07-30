@@ -162,3 +162,5 @@ C:\Users\shuks\RiderProjects\Voice\Voice-BackEnd\UserManagerApi\UserManagerApi\o
 C:\Users\shuks\RiderProjects\Voice\Voice-BackEnd\UserManagerApi\UserManagerApi\obj\Debug\net8.0\UserManagerApi.genruntimeconfig.cache
 C:\Users\shuks\RiderProjects\Voice\Voice-BackEnd\UserManagerApi\UserManagerApi\obj\Debug\net8.0\ref\UserManagerApi.dll
 C:\Users\shuks\RiderProjects\Voice\Voice-BackEnd\UserManagerApi\UserManagerApi\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\shuks\RiderProjects\Voice\Voice-BackEnd\UserManagerApi\UserManagerApi\bin\Debug\net8.0\MassTransit.RabbitMqTransport.dll
+C:\Users\shuks\RiderProjects\Voice\Voice-BackEnd\UserManagerApi\UserManagerApi\bin\Debug\net8.0\RabbitMQ.Client.dll

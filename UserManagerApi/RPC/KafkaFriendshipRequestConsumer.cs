@@ -25,7 +25,7 @@ public class KafkaFriendshipRequestConsumer : IConsumer<KafkaFriendshipRequest>
     {
         var message = context.Message;
         _logger.LogInformation($"Received message: Type={message.Type}, User={message.User}, Friend={message.Friend}");
-        var res = await _userService.AddUserAsync(message.User, message.Friend);
+        var res = await _userService.AddFriendAsync(message.User, message.Friend);
         if (res.Item1)
         {
             _logger.LogInformation($"отправляю пользователя:{res.Item2}, добавил:{res.Item3}");
@@ -34,18 +34,15 @@ public class KafkaFriendshipRequestConsumer : IConsumer<KafkaFriendshipRequest>
                 Result = true,
                 Description = "All good"
             };
-            _logger.LogInformation($"{response.Result},{response.Description}");
             await _producerService.SendMessageAsync(response);
         }
         else
         {
-            _logger.LogInformation($"пососать не хочешь?");
             var response = new FriendshipResponse
             {
                 Result = false,
                 Description = "Something went worng"
             };
-            _logger.LogInformation($"{response.Result},{response.Description}");
             await _producerService.SendMessageAsync(response);
         }
     }
